@@ -1,0 +1,23 @@
+{
+  "name": "brickquote-pro",
+  "version": "1.0.0",
+  "description": "Brick fence and wall quote calculator with Supabase auth, leads, and contractor marketplace",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "lint": "npx eslint assets/js/ server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "@supabase/supabase-js": "^2.44.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
