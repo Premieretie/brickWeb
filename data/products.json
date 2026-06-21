@@ -1,0 +1,190 @@
+{
+  "bricks": [
+    {
+      "id": "standard-red",
+      "name": "Standard Red",
+      "category": "classic",
+      "description": "Traditional red brick, perfect for classic Australian homes",
+      "pricePerSqm": { "min": 180, "max": 220 },
+      "color": "#C75B39",
+      "texture": "standard",
+      "popular": true
+    },
+    {
+      "id": "face-brick",
+      "name": "Face Brick",
+      "category": "premium",
+      "description": "Premium face brick with enhanced texture and color consistency",
+      "pricePerSqm": { "min": 220, "max": 280 },
+      "color": "#B85C38",
+      "texture": "premium",
+      "popular": true
+    },
+    {
+      "id": "smooth-face",
+      "name": "Smooth Face Brick",
+      "category": "modern",
+      "description": "Smooth finish brick for contemporary architectural designs",
+      "pricePerSqm": { "min": 240, "max": 300 },
+      "color": "#D4A574",
+      "texture": "smooth",
+      "popular": false
+    },
+    {
+      "id": "rendered",
+      "name": "Rendered Finish",
+      "category": "modern",
+      "description": "Cement rendered finish available in any color",
+      "pricePerSqm": { "min": 280, "max": 350 },
+      "color": "#F5F5F0",
+      "texture": "rendered",
+      "popular": true
+    },
+    {
+      "id": "feature-brick",
+      "name": "Feature Brick",
+      "category": "premium",
+      "description": "Architectural feature brick with unique patterns",
+      "pricePerSqm": { "min": 300, "max": 400 },
+      "color": "#8B4513",
+      "texture": "feature",
+      "popular": false
+    },
+    {
+      "id": "custom-brick",
+      "name": "Custom Brick",
+      "category": "custom",
+      "description": "Custom ordered brick to match your specific requirements",
+      "pricePerSqm": { "min": 350, "max": 500 },
+      "color": "#A0522D",
+      "texture": "custom",
+      "popular": false
+    }
+  ],
+  "columns": [
+    {
+      "id": "none",
+      "name": "No Columns",
+      "size": null,
+      "priceEach": { "min": 0, "max": 0 }
+    },
+    {
+      "id": "230",
+      "name": "230 x 230mm",
+      "size": { "width": 230, "depth": 230 },
+      "priceEach": { "min": 250, "max": 600 },
+      "spacing": 6
+    },
+    {
+      "id": "350",
+      "name": "350 x 350mm",
+      "size": { "width": 350, "depth": 350 },
+      "priceEach": { "min": 600, "max": 1200 },
+      "spacing": 4
+    },
+    {
+      "id": "450",
+      "name": "450 x 450mm",
+      "size": { "width": 450, "depth": 450 },
+      "priceEach": { "min": 900, "max": 1800 },
+      "spacing": 3
+    }
+  ],
+  "mailboxes": [
+    {
+      "id": "none",
+      "name": "No Mailbox",
+      "type": null,
+      "price": 0
+    },
+    {
+      "id": "standard",
+      "name": "Standard Mailbox",
+      "type": "insert",
+      "dimensions": { "width": 230, "height": 300, "depth": 150 },
+      "price": 750
+    },
+    {
+      "id": "pillar",
+      "name": "Pillar Mailbox",
+      "type": "pillar",
+      "dimensions": { "width": 350, "height": 600, "depth": 350 },
+      "price": 1500
+    },
+    {
+      "id": "parcel",
+      "name": "Large Parcel Box",
+      "type": "parcel",
+      "dimensions": { "width": 450, "height": 450, "depth": 350 },
+      "price": 2500
+    }
+  ],
+  "projectTypes": [
+    {
+      "id": "brick-fence",
+      "name": "Brick Fence",
+      "description": "Standard boundary fence construction",
+      "basePricePerSqm": { "min": 180, "max": 350 },
+      "typicalHeight": { "min": 1.2, "max": 2.4 },
+      "requiresFootings": true
+    },
+    {
+      "id": "brick-wall",
+      "name": "Brick Wall",
+      "description": "Privacy wall for gardens and courtyards",
+      "basePricePerSqm": { "min": 200, "max": 380 },
+      "typicalHeight": { "min": 1.8, "max": 3.0 },
+      "requiresFootings": true
+    },
+    {
+      "id": "front-fence",
+      "name": "Front Fence",
+      "description": "Decorative front boundary fence",
+      "basePricePerSqm": { "min": 220, "max": 400 },
+      "typicalHeight": { "min": 1.2, "max": 1.8 },
+      "requiresFootings": true
+    },
+    {
+      "id": "retaining-wall",
+      "name": "Retaining Wall",
+      "description": "Engineered wall for sloped terrain",
+      "basePricePerSqm": { "min": 280, "max": 500 },
+      "typicalHeight": { "min": 0.6, "max": 2.0 },
+      "requiresEngineering": true,
+      "requiresFootings": true
+    },
+    {
+      "id": "mailbox",
+      "name": "Mailbox",
+      "description": "Standalone mailbox installation",
+      "basePrice": { "min": 750, "max": 2500 },
+      "requiresFootings": true
+    },
+    {
+      "id": "mailbox-fence",
+      "name": "Mailbox + Fence",
+      "description": "Combined fence with integrated mailbox",
+      "basePricePerSqm": { "min": 180, "max": 350 },
+      "basePrice": { "min": 750, "max": 2500 },
+      "requiresFootings": true
+    }
+  ],
+  "extras": {
+    "rendering": {
+      "name": "Additional Rendering",
+      "pricePerSqm": 45
+    },
+    "footings": {
+      "name": "Enhanced Footings",
+      "pricePerMeter": 85
+    },
+    "capping": {
+      "name": "Decorative Capping",
+      "pricePerMeter": 35
+    },
+    "engineering": {
+      "name": "Engineering Certification",
+      "priceFlat": 850
+    }
+  }
+}

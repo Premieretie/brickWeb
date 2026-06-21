@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://brickquotepro.com/dashboard/admin/" />
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | BrickQuote Pro</title>
+    <meta name="description" content="Admin dashboard for BrickQuote Pro.">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="/" class="logo">BrickQuote Pro</a>
+            <nav class="main-nav">
+                <a href="/quote/">Calculator</a>
+                <a href="/ar-measure/">AR Measure</a>
+                <a href="/faq/">FAQ</a>
+                <a href="/contractors">Contractors</a>
+                <a href="/quote/" class="btn-primary quote-btn">Get Quote</a>
+            </nav>
+            <button class="mobile-menu-toggle" aria-label="Open menu">☰</button>
+        </div>
+    </header>
+
+    <main class="dashboard-page">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Admin Dashboard</h1>
+                <p>Manage users, contractors, and leads.</p>
+            </div>
+            <div class="dashboard-grid">
+                <aside class="dashboard-sidebar">
+                    <nav id="admin-nav">
+                        <a href="#overview" class="active" data-tab="overview">Overview</a>
+                        <a href="#users" data-tab="users">Users</a>
+                        <a href="#contractors" data-tab="contractors">Contractors</a>
+                        <a href="#leads" data-tab="leads">Leads</a>
+                        <a href="/account">Account</a>
+                        <a href="#" id="logout-link">Log out</a>
+                    </nav>
+                </aside>
+                <div class="dashboard-main">
+                    <section id="tab-overview" class="tab-panel">
+                        <div class="stats-grid">
+                            <div class="stat-card"><span>Users</span><strong id="stat-users">0</strong></div>
+                            <div class="stat-card"><span>Contractors</span><strong id="stat-contractors">0</strong></div>
+                            <div class="stat-card"><span>Leads</span><strong id="stat-all-leads">0</strong></div>
+                            <div class="stat-card"><span>Quotes</span><strong id="stat-all-quotes">0</strong></div>
+                        </div>
+                    </section>
+
+                    <section id="tab-users" class="tab-panel" style="display: none;">
+                        <div class="dashboard-card">
+                            <h2>Users</h2>
+                            <div id="users-list"><div class="empty-state">Loading...</div></div>
+                        </div>
+                    </section>
+
+                    <section id="tab-contractors" class="tab-panel" style="display: none;">
+                        <div class="dashboard-card">
+                            <h2>Contractors</h2>
+                            <div id="contractors-list"><div class="empty-state">Loading...</div></div>
+                        </div>
+                    </section>
+
+                    <section id="tab-leads" class="tab-panel" style="display: none;">
+                        <div class="dashboard-card">
+                            <h2>Leads</h2>
+                            <div id="leads-list"><div class="empty-state">Loading...</div></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 BrickQuote Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/assets/js/vendor/supabase.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/assets/js/supabase-client.js"></script>
+    <script src="/assets/js/ui-helpers.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/header-auth.js"></script>
+    <script>
+        (function() {
+            'use strict';
+
+            async function init() {
+                await Auth.requireAuth(['admin']);
+                setupTabs();
+                await loadOverview();
+                await loadUsers();
+                await loadContractors();
+                await loadLeads();
+            }
+
+            function setupTabs() {
+                document.getElementById('admin-nav').querySelectorAll('a[data-tab]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const tab = link.dataset.tab;
+                        document.querySelectorAll('#admin-nav a[data-tab]').forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                        document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+                        document.getElementById('tab-' + tab).style.display = 'block';
+                    });
+                });
+            }
+
+            async function loadOverview() {
+                const { count: users } = await window.sb.from('profiles').select('*', { count: 'exact', head: true });
+                const { count: contractors } = await window.sb.from('contractors').select('*', { count: 'exact', head: true });
+                const { count: leads } = await window.sb.from('leads').select('*', { count: 'exact', head: true });
+                const { count: quotes } = await window.sb.from('quotes').select('*', { count: 'exact', head: true });
+                document.getElementById('stat-users').textContent = users || 0;
+                document.getElementById('stat-contractors').textContent = contractors || 0;
+                document.getElementById('stat-all-leads').textContent = leads || 0;
+                document.getElementById('stat-all-quotes').textContent = quotes || 0;
+            }
+
+            async function loadUsers() {
+                const { data, error } = await window.sb.from('profiles').select('*').order('created_at', { ascending: false });
+                const container = document.getElementById('users-list');
+                if (error) {
+                    UI.showToast(error.message, 'error');
+                    return;
+                }
+                if (!data || data.length === 0) {
+                    UI.renderEmptyState(container, 'No users found.');
+                    return;
+                }
+                container.innerHTML = `<table class="bq-table">
+                    <thead><tr><th>Email</th><th>Role</th><th>Name</th><th>Joined</th><th></th></tr></thead>
+                    <tbody>${data.map(u => `<tr>
+                        <td>${u.email}</td>
+                        <td><span class="status-badge">${u.role}</span></td>
+                        <td>${[u.first_name, u.last_name].filter(Boolean).join(' ') || '-'}</td>
+                        <td>${UI.formatDate(u.created_at)}</td>
+                        <td class="actions">
+                            <button class="btn-text btn-small promote-user" data-id="${u.id}" data-role="${u.role}">${u.role === 'admin' ? 'Demote' : 'Make admin'}</button>
+                        </td>
+                    </tr>`).join('')}</tbody>
+                </table>`;
+                container.querySelectorAll('.promote-user').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const newRole = btn.dataset.role === 'admin' ? 'customer' : 'admin';
+                        const { error } = await window.sb.from('profiles').update({ role: newRole }).eq('id', btn.dataset.id);
+                        if (error) UI.showToast(error.message, 'error');
+                        else {
+                            UI.showToast('User role updated', 'success');
+                            loadUsers();
+                        }
+                    });
+                });
+            }
+
+            async function loadContractors() {
+                const { data, error } = await window.sb.from('contractors').select('*').order('created_at', { ascending: false });
+                const container = document.getElementById('contractors-list');
+                if (error) {
+                    UI.showToast(error.message, 'error');
+                    return;
+                }
+                if (!data || data.length === 0) {
+                    UI.renderEmptyState(container, 'No contractors found.');
+                    return;
+                }
+                container.innerHTML = `<table class="bq-table">
+                    <thead><tr><th>Business</th><th>Contact</th><th>Plan</th><th>Active</th><th></th></tr></thead>
+                    <tbody>${data.map(c => `<tr>
+                        <td>${c.business_name}</td>
+                        <td>${c.email}</td>
+                        <td>${c.subscription_plan}</td>
+                        <td>${c.is_active ? 'Yes' : 'No'}</td>
+                        <td class="actions">
+                            <button class="btn-text btn-small toggle-contractor" data-id="${c.id}" data-active="${c.is_active}">${c.is_active ? 'Disable' : 'Enable'}</button>
+                            <a href="/contractors/${c.slug}" target="_blank" class="btn-text btn-small">View</a>
+                        </td>
+                    </tr>`).join('')}</tbody>
+                </table>`;
+                container.querySelectorAll('.toggle-contractor').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const active = btn.dataset.active === 'true';
+                        const { error } = await window.sb.from('contractors').update({ is_active: !active }).eq('id', btn.dataset.id);
+                        if (error) UI.showToast(error.message, 'error');
+                        else {
+                            UI.showToast('Contractor updated', 'success');
+                            loadContractors();
+                            loadOverview();
+                        }
+                    });
+                });
+            }
+
+            async function loadLeads() {
+                const { data, error } = await window.sb.from('leads').select('*').order('created_at', { ascending: false });
+                const container = document.getElementById('leads-list');
+                if (error) {
+                    UI.showToast(error.message, 'error');
+                    return;
+                }
+                if (!data || data.length === 0) {
+                    UI.renderEmptyState(container, 'No leads found.');
+                    return;
+                }
+                container.innerHTML = `<table class="bq-table">
+                    <thead><tr><th>Name</th><th>Suburb</th><th>Status</th><th>Assigned</th><th>Date</th><th></th></tr></thead>
+                    <tbody>${data.map(l => `<tr>
+                        <td>${l.name}</td>
+                        <td>${l.suburb || '-'}</td>
+                        <td><span class="status-badge status-${l.status}">${l.status}</span></td>
+                        <td>${l.contractor_id ? 'Yes' : 'No'}</td>
+                        <td>${UI.formatDate(l.created_at)}</td>
+                        <td class="actions">
+                            <button class="btn-text btn-small assign-lead" data-id="${l.id}">Assign</button>
+                            <button class="btn-text btn-small status-lead" data-id="${l.id}" data-status="${l.status}">Status</button>
+                        </td>
+                    </tr>`).join('')}</tbody>
+                </table>`;
+                container.querySelectorAll('.assign-lead').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const contractorId = prompt('Enter contractor user_id to assign:');
+                        if (!contractorId) return;
+                        const { error } = await window.sb.from('leads').update({ contractor_id: contractorId, status: 'assigned' }).eq('id', btn.dataset.id);
+                        if (error) UI.showToast(error.message, 'error');
+                        else {
+                            UI.showToast('Lead assigned', 'success');
+                            loadLeads();
+                        }
+                    });
+                });
+                container.querySelectorAll('.status-lead').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const statuses = ['new', 'assigned', 'contacted', 'quoted', 'won', 'lost'];
+                        const current = btn.dataset.status;
+                        const nextIndex = (statuses.indexOf(current) + 1) % statuses.length;
+                        const next = statuses[nextIndex];
+                        const { error } = await window.sb.from('leads').update({ status: next }).eq('id', btn.dataset.id);
+                        if (error) UI.showToast(error.message, 'error');
+                        else {
+                            UI.showToast('Status updated', 'success');
+                            loadLeads();
+                        }
+                    });
+                });
+            }
+
+            document.getElementById('logout-link').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await Auth.signOut();
+                window.location.href = '/';
+            });
+
+            init();
+        })();
+    </script>
+</body>
+</html>

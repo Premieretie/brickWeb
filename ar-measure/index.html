@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://brickquotepro.com/ar-measure/" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Smart measurement tool for brick fencing and walls - works with AR, camera, or manual entry.">
+    <title>Smart Measure | BrickQuote Pro</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/ar-measure.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="ar-measure-page">
+    <header class="main-header">
+        <div class="container">
+            <a href="/" class="logo">BrickQuote Pro</a>
+            <nav class="main-nav">
+                <a href="/quote/">Calculator</a>
+                <a href="/ar-measure/" class="active">Smart Measure</a>
+                <a href="/faq/">FAQ</a>
+                <a href="/brick-fence-calculator/" class="btn-primary quote-btn">Get Quote</a>
+            </nav>
+            <button class="mobile-menu-toggle" aria-label="Open menu">☰</button>
+        </div>
+    </header>
+
+    <main class="ar-measure-main">
+        <!-- Smart Measurement Mode Selector -->
+        <section class="mode-selector" id="mode-selector">
+            <div class="mode-selector-content">
+                <h1>Smart Measurement</h1>
+                <p class="mode-subtitle">Choose how you want to measure. We always find a way to measure.</p>
+                <div class="mode-cards" id="mode-cards">
+                    <button class="mode-card" data-mode="ar" id="mode-ar">
+                        <span class="mode-icon">✨</span>
+                        <span class="mode-title">AR Mode</span>
+                        <span class="mode-desc">World-space point placement</span>
+                        <span class="mode-status" id="status-ar">Checking...</span>
+                    </button>
+                    <button class="mode-card" data-mode="camera" id="mode-camera">
+                        <span class="mode-icon">📷</span>
+                        <span class="mode-title">Camera Mode</span>
+                        <span class="mode-desc">Measure with your camera</span>
+                        <span class="mode-status" id="status-camera">Checking...</span>
+                    </button>
+                    <button class="mode-card" data-mode="manual" id="mode-manual">
+                        <span class="mode-icon">📏</span>
+                        <span class="mode-title">Manual Mode</span>
+                        <span class="mode-desc">Enter measurements directly</span>
+                        <span class="mode-status" id="status-manual">Always available</span>
+                    </button>
+                </div>
+                <button class="btn-diagnostics" id="btn-diagnostics">Show Diagnostics</button>
+            </div>
+        </section>
+
+        <!-- Diagnostics Panel -->
+        <section class="diagnostics-panel" id="diagnostics-panel">
+            <div class="diagnostics-header">
+                <h2>Measurement Diagnostics</h2>
+                <button class="close-diagnostics" id="close-diagnostics">✕</button>
+            </div>
+            <div class="diagnostics-grid" id="diagnostics-grid">
+                <div class="diagnostic-item"><span>Browser</span><span id="diag-browser">-</span></div>
+                <div class="diagnostic-item"><span>Device</span><span id="diag-device">-</span></div>
+                <div class="diagnostic-item"><span>OS</span><span id="diag-os">-</span></div>
+                <div class="diagnostic-item"><span>HTTPS</span><span id="diag-https">-</span></div>
+                <div class="diagnostic-item"><span>Camera</span><span id="diag-camera">-</span></div>
+                <div class="diagnostic-item"><span>Motion</span><span id="diag-motion">-</span></div>
+                <div class="diagnostic-item"><span>WebXR</span><span id="diag-webxr">-</span></div>
+                <div class="diagnostic-item"><span>Orientation</span><span id="diag-orientation">-</span></div>
+            </div>
+        </section>
+
+        <!-- AR Mode Container (WebXR) -->
+        <section class="measure-container" id="ar-container" style="display: none;">
+            <canvas id="ar-canvas"></canvas>
+            <div class="ar-overlay" id="ar-overlay">
+                <div class="camera-crosshair">⊕</div>
+                <div class="tap-hint" id="ar-active-hint">Align crosshair with start point and tap Place Point</div>
+                <div class="fallback-notice" id="ar-fallback-notice" style="display: none;"></div>
+                <div class="instructions-panel" id="ar-instructions-panel">
+                    <h3>How to measure</h3>
+                    <p>Move your device to find the floor.</p>
+                    <p>Align the crosshair with the first point and tap <strong>Place Point</strong>.</p>
+                    <p>Walk to the next point and tap <strong>Place Point</strong> again.</p>
+                    <p>Tap <strong>Finish</strong> to save the total length.</p>
+                    <p>Tap <strong>Height</strong> to switch to height mode.</p>
+                </div>
+            </div>
+
+            <div class="top-hud">
+                <div class="tracking-indicator" id="ar-tracking-indicator">⚪ Tracking unknown</div>
+                <div class="measure-readout">
+                    <span class="readout">Points: <strong id="ar-points-count">0</strong></span>
+                    <span class="readout">Length: <strong id="ar-distance-value">0.00 m</strong></span>
+                    <span class="readout">Height: <strong id="ar-height-value">0.00 m</strong></span>
+                    <span class="readout">Area: <strong id="ar-area-value">0.00 m²</strong></span>
+                </div>
+            </div>
+
+            <button class="btn-back" id="ar-btn-back" type="button">← Back</button>
+
+            <div class="bottom-dock">
+                <div class="submode-toggle">
+                    <button id="ar-btn-length" class="active">Length</button>
+                    <button id="ar-btn-height">Height</button>
+                </div>
+                <div class="dock-actions">
+                    <button class="dock-btn primary" id="ar-btn-place" type="button">Place Point</button>
+                    <button class="dock-btn" id="ar-btn-undo" type="button">Undo</button>
+                    <button class="dock-btn" id="ar-btn-reset" type="button">Reset</button>
+                    <button class="dock-btn" id="ar-btn-finish" type="button">Finish</button>
+                    <button class="dock-btn" id="ar-btn-instructions" type="button">Help</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Camera Mode Container -->
+        <section class="measure-container" id="camera-container" style="display: none;">
+            <div class="camera-container camera-mobile">
+                <video id="camera-video" autoplay playsinline muted></video>
+                <canvas id="camera-canvas"></canvas>
+
+                <div class="camera-overlay">
+                    <div class="camera-crosshair">⊕</div>
+                    <div class="tap-hint" id="cam-active-hint">Align crosshair with start point and tap Place Point</div>
+                    <div class="fallback-notice" id="cam-fallback-notice" style="display: none;"></div>
+                    <div class="instructions-panel" id="cam-instructions-panel">
+                        <h3>Camera Measurement</h3>
+                        <p>Tap <strong>Calibrate</strong> and use a known object to set scale.</p>
+                        <p>Align the crosshair with the first point and tap <strong>Place Point</strong>.</p>
+                        <p>Tap <strong>Place Point</strong> again for the next point.</p>
+                        <p>Tap <strong>Finish</strong> to save the measurement.</p>
+                    </div>
+                </div>
+
+                <div class="top-hud">
+                    <div class="tracking-indicator" id="cam-tracking-indicator">📷 Camera mode</div>
+                    <div class="measure-readout">
+                        <span class="readout">Points: <strong id="cam-points-count">0</strong></span>
+                        <span class="readout">Length: <strong id="cam-distance-value">0.00 m</strong></span>
+                        <span class="readout">Height: <strong id="cam-height-value">0.00 m</strong></span>
+                        <span class="readout">Area: <strong id="cam-area-value">0.00 m²</strong></span>
+                    </div>
+                </div>
+
+                <button class="btn-back" id="cam-btn-back" type="button">← Back</button>
+
+                <div class="bottom-dock">
+                    <div class="submode-toggle">
+                        <button id="cam-btn-length" class="active">Length</button>
+                        <button id="cam-btn-height">Height</button>
+                    </div>
+                    <div class="dock-actions">
+                        <button class="dock-btn primary" id="cam-btn-place" type="button">Place Point</button>
+                        <button class="dock-btn" id="cam-btn-undo" type="button">Undo</button>
+                        <button class="dock-btn" id="cam-btn-reset" type="button">Reset</button>
+                        <button class="dock-btn" id="cam-btn-finish" type="button">Finish</button>
+                        <button class="dock-btn" id="cam-btn-calibrate" type="button">Calibrate</button>
+                        <button class="dock-btn" id="cam-btn-instructions" type="button">Help</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Manual Mode Container -->
+        <section class="measure-container" id="manual-container" style="display: none;">
+            <div class="manual-container">
+                <button class="btn-back" id="manual-btn-back" type="button">← Back</button>
+                <div class="manual-panel">
+                    <h2>Manual Measurement</h2>
+                    <p>Enter your measurements in metres. You can add multiple wall sections.</p>
+                    <form id="manual-form" class="manual-form">
+                        <div class="manual-input-group">
+                            <label for="manual-length">Length (metres)</label>
+                            <input type="number" id="manual-length" step="0.01" min="0.1" placeholder="e.g. 2.5" required>
+                        </div>
+                        <div class="manual-input-group">
+                            <label for="manual-height">Height (metres)</label>
+                            <input type="number" id="manual-height" step="0.01" min="0.1" placeholder="e.g. 1.8" required>
+                        </div>
+                        <div class="manual-input-group">
+                            <label>Measurement Type</label>
+                            <div class="measurement-types">
+                                <label class="radio-option">
+                                    <input type="radio" name="manual-type" value="wall-length" checked>
+                                    <span>Wall Length</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="manual-type" value="wall-height">
+                                    <span>Wall Height</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="manual-type" value="fence-length">
+                                    <span>Fence Length</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="manual-type" value="retaining-length">
+                                    <span>Retaining Length</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="manual-type" value="retaining-height">
+                                    <span>Retaining Height</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="manual-type" value="wall-section">
+                                    <span>Wall Section (length + height)</span>
+                                </label>
+                                <label class="radio-option">
+                                    <input type="radio" name="manual-type" value="custom">
+                                    <span>Custom</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-ar btn-save">Save Measurement</button>
+                    </form>
+                </div>
+                <div class="manual-history">
+                    <h3>Measurements</h3>
+                    <ul id="measurements-list"></ul>
+                    <div class="area-summary" id="measurements-summary" style="display: none;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calibration Panel -->
+        <section class="calibration-panel" id="calibration-panel" style="display: none;">
+            <div class="calibration-content" id="calibration-content">
+                <div class="calibration-header">
+                    <h2>Calibrate Camera</h2>
+                    <button class="btn-close-cal" id="btn-close-calibration" type="button">Close</button>
+                </div>
+                <p>Choose a known reference object to set the scale.</p>
+                <div class="calibration-methods">
+                    <button class="calibration-method" id="btn-calibrate-brick" type="button">
+                        <span class="method-title">Standard Brick</span>
+                        <span class="method-desc">230 × 110 × 76 mm</span>
+                    </button>
+                    <button class="calibration-method" id="btn-calibrate-a4" type="button">
+                        <span class="method-title">A4 Sheet</span>
+                        <span class="method-desc">297 × 210 mm</span>
+                    </button>
+                    <button class="calibration-method" id="btn-calibrate-custom" type="button">
+                        <span class="method-title">Known Distance</span>
+                        <span class="method-desc">Enter a distance in metres</span>
+                    </button>
+                </div>
+                <div class="calibration-detail" id="calibration-detail" style="display: none;">
+                    <p class="calibration-instruction" id="calibration-label">Place the reference object in view and tap two points on it.</p>
+                    <div class="calibration-input" id="calibration-distance-input" style="display: none;">
+                        <label>Known distance (metres)</label>
+                        <input type="number" id="calibration-distance" step="0.01" min="0.01" placeholder="e.g. 1.0">
+                    </div>
+                    <div class="calibration-actions">
+                        <button class="btn-ar btn-save" id="btn-apply-calibration" type="button">Confirm Scale</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="/assets/js/mobile-menu.js"></script>
+    <script src="/assets/js/ar-measure.js"></script>
+    <script src="/assets/js/vendor/supabase.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/assets/js/supabase-client.js"></script>
+    <script src="/assets/js/ui-helpers.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/header-auth.js"></script>
+</body>
+</html>

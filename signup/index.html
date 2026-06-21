@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://brickquotepro.com/signup/" />
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | BrickQuote Pro</title>
+    <meta name="description" content="Create a BrickQuote Pro account to save quotes and find local bricklayers.">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="/" class="logo">BrickQuote Pro</a>
+            <nav class="main-nav">
+                <a href="/quote/">Calculator</a>
+                <a href="/ar-measure/">AR Measure</a>
+                <a href="/faq/">FAQ</a>
+                <a href="/quote/" class="btn-primary quote-btn">Get Quote</a>
+            </nav>
+            <button class="mobile-menu-toggle" aria-label="Open menu">☰</button>
+        </div>
+    </header>
+
+    <main class="auth-page">
+        <div class="auth-card">
+            <h1>Create account</h1>
+            <p class="auth-subtitle">Save quotes and connect with local bricklayers.</p>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="account-type">Account type</label>
+                    <select id="account-type" name="role" required>
+                        <option value="customer">Homeowner / Customer</option>
+                        <option value="contractor">Contractor / Business</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="first-name">First name</label>
+                    <input type="text" id="first-name" name="first_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="last-name">Last name</label>
+                    <input type="text" id="last-name" name="last_name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required minlength="8" autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn-primary btn-block">Create Account</button>
+            </form>
+            <div class="auth-links">
+                <p>Already have an account? <a href="/login">Log in</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 BrickQuote Pro. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="/assets/js/vendor/supabase.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/assets/js/supabase-client.js"></script>
+    <script src="/assets/js/ui-helpers.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/header-auth.js"></script>
+    <script>
+        (function() {
+            'use strict';
+            Auth.requireGuest();
+
+            const form = document.getElementById('signup-form');
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                UI.showLoading(form);
+                const email = form.email.value.trim();
+                const password = form.password.value;
+                const metadata = {
+                    first_name: form.first_name.value.trim(),
+                    last_name: form.last_name.value.trim(),
+                    role: form.role.value
+                };
+                const { data, error } = await Auth.signUp(email, password, metadata);
+                UI.hideLoading(form);
+                if (error) {
+                    UI.showToast(error.message, 'error');
+                    return;
+                }
+                UI.showToast('Account created. Please check your email to confirm.', 'success');
+                if (data.session) {
+                    window.location.href = '/account';
+                } else {
+                    form.reset();
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

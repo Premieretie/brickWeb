@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://brickquotepro.com/account/" />
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account | BrickQuote Pro</title>
+    <meta name="description" content="Manage your BrickQuote Pro account.">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="/" class="logo">BrickQuote Pro</a>
+            <nav class="main-nav">
+                <a href="/quote/">Calculator</a>
+                <a href="/ar-measure/">AR Measure</a>
+                <a href="/faq/">FAQ</a>
+                <a href="/contractors">Contractors</a>
+                <a href="/quote/" class="btn-primary quote-btn">Get Quote</a>
+            </nav>
+            <button class="mobile-menu-toggle" aria-label="Open menu">☰</button>
+        </div>
+    </header>
+
+    <main class="dashboard-page">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Your Account</h1>
+                <p id="account-email">Loading...</p>
+            </div>
+            <div class="dashboard-grid">
+                <aside class="dashboard-sidebar">
+                    <nav id="account-nav">
+                        <a href="/account" class="active">Profile</a>
+                        <a href="/dashboard/customer">Dashboard</a>
+                        <a href="#" id="logout-link">Log out</a>
+                    </nav>
+                </aside>
+                <div class="dashboard-main">
+                    <div class="dashboard-card profile-form">
+                        <h2>Profile</h2>
+                        <form id="profile-form">
+                            <div class="form-group">
+                                <label for="first-name">First name</label>
+                                <input type="text" id="first-name" name="first_name">
+                            </div>
+                            <div class="form-group">
+                                <label for="last-name">Last name</label>
+                                <input type="text" id="last-name" name="last_name">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <input type="text" id="address" name="address">
+                            </div>
+                            <button type="submit" class="btn-primary">Save Profile</button>
+                        </form>
+                    </div>
+                    <div class="dashboard-card">
+                        <h2>Security</h2>
+                        <form id="password-form">
+                            <div class="form-group">
+                                <label for="new-password">New password</label>
+                                <input type="password" id="new-password" name="password" minlength="8" required>
+                            </div>
+                            <button type="submit" class="btn-secondary">Update Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 BrickQuote Pro. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="/assets/js/vendor/supabase.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/assets/js/supabase-client.js"></script>
+    <script src="/assets/js/ui-helpers.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/header-auth.js"></script>
+    <script>
+        (function() {
+            'use strict';
+
+            let currentProfile = null;
+
+            async function init() {
+                const { session, profile } = await Auth.requireAuth();
+                if (!session) return;
+
+                currentProfile = profile;
+                document.getElementById('account-email').textContent = session.user.email;
+
+                if (profile) {
+                    document.getElementById('first-name').value = profile.first_name || '';
+                    document.getElementById('last-name').value = profile.last_name || '';
+                    document.getElementById('phone').value = profile.phone || '';
+                    document.getElementById('address').value = profile.address || '';
+                }
+
+                // Adjust sidebar for role
+                const nav = document.getElementById('account-nav');
+                const dashboardLink = nav.querySelector('a[href="/dashboard/customer"]');
+                if (profile.role === 'contractor') dashboardLink.href = '/dashboard/contractor';
+                if (profile.role === 'admin') dashboardLink.href = '/dashboard/admin';
+            }
+
+            document.getElementById('profile-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const updates = {
+                    first_name: document.getElementById('first-name').value.trim(),
+                    last_name: document.getElementById('last-name').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    address: document.getElementById('address').value.trim()
+                };
+                const { error } = await Auth.updateProfile(updates);
+                if (error) {
+                    UI.showToast(error.message, 'error');
+                    return;
+                }
+                UI.showToast('Profile saved.', 'success');
+            });
+
+            document.getElementById('password-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                UI.showLoading(e.target);
+                const { error } = await Auth.updatePassword(document.getElementById('new-password').value);
+                UI.hideLoading(e.target);
+                if (error) {
+                    UI.showToast(error.message, 'error');
+                    return;
+                }
+                UI.showToast('Password updated.', 'success');
+                e.target.reset();
+            });
+
+            document.getElementById('logout-link').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await Auth.signOut();
+                window.location.href = '/';
+            });
+
+            init();
+        })();
+    </script>
+</body>
+</html>

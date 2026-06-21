@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="canonical" href="https://brickquotepro.com/dashboard/contractor/" />
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contractor Dashboard | BrickQuote Pro</title>
+    <meta name="description" content="Manage your leads, contractor profile, and gallery.">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="/" class="logo">BrickQuote Pro</a>
+            <nav class="main-nav">
+                <a href="/quote/">Calculator</a>
+                <a href="/ar-measure/">AR Measure</a>
+                <a href="/faq/">FAQ</a>
+                <a href="/contractors">Contractors</a>
+                <a href="/quote/" class="btn-primary quote-btn">Get Quote</a>
+            </nav>
+            <button class="mobile-menu-toggle" aria-label="Open menu">☰</button>
+        </div>
+    </header>
+
+    <main class="dashboard-page">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1>Contractor Dashboard</h1>
+                <p>Manage your leads, business profile, and gallery.</p>
+            </div>
+            <div class="dashboard-grid">
+                <aside class="dashboard-sidebar">
+                    <nav id="dashboard-nav">
+                        <a href="#overview" class="active" data-tab="overview">Overview</a>
+                        <a href="#leads" data-tab="leads">Leads</a>
+                        <a href="#profile" data-tab="profile">Profile</a>
+                        <a href="#gallery" data-tab="gallery">Gallery</a>
+                        <a href="#subscription" data-tab="subscription">Subscription</a>
+                        <a href="/account">Account</a>
+                        <a href="#" id="logout-link">Log out</a>
+                    </nav>
+                </aside>
+                <div class="dashboard-main">
+                    <!-- Overview -->
+                    <section id="tab-overview" class="tab-panel">
+                        <div class="stats-grid">
+                            <div class="stat-card"><span>New Leads</span><strong id="stat-new">0</strong></div>
+                            <div class="stat-card"><span>Total Leads</span><strong id="stat-total">0</strong></div>
+                            <div class="stat-card"><span>Won</span><strong id="stat-won">0</strong></div>
+                            <div class="stat-card"><span>Plan</span><strong id="stat-plan">starter</strong></div>
+                        </div>
+                        <div class="dashboard-card">
+                            <h2>Recent Leads</h2>
+                            <div id="recent-leads"><div class="empty-state">Loading...</div></div>
+                        </div>
+                    </section>
+
+                    <!-- Leads -->
+                    <section id="tab-leads" class="tab-panel" style="display: none;">
+                        <div class="dashboard-card">
+                            <h2>All Leads</h2>
+                            <div id="all-leads"><div class="empty-state">Loading...</div></div>
+                        </div>
+                    </section>
+
+                    <!-- Profile -->
+                    <section id="tab-profile" class="tab-panel" style="display: none;">
+                        <div class="dashboard-card">
+                            <h2>Business Profile</h2>
+                            <form id="contractor-form">
+                                <div class="form-group">
+                                    <label for="business-name">Business name</label>
+                                    <input type="text" id="business-name" name="business_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="abn">ABN</label>
+                                    <input type="text" id="abn" name="abn">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contact-name">Contact name</label>
+                                    <input type="text" id="contact-name" name="contact_name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contractor-phone">Phone</label>
+                                    <input type="tel" id="contractor-phone" name="phone">
+                                </div>
+                                <div class="form-group">
+                                    <label for="contractor-email">Email</label>
+                                    <input type="email" id="contractor-email" name="email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="website">Website</label>
+                                    <input type="url" id="website" name="website">
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea id="description" name="description" rows="4"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="logo">Logo</label>
+                                    <input type="file" id="logo" name="logo" accept="image/*">
+                                    <img id="logo-preview" class="profile-preview" alt="Logo preview" style="display:none;">
+                                </div>
+                                <div class="form-group">
+                                    <label for="service-areas">Service areas (comma separated suburbs)</label>
+                                    <input type="text" id="service-areas" name="service_areas">
+                                </div>
+                                <button type="submit" class="btn-primary">Save Profile</button>
+                            </form>
+                        </div>
+                    </section>
+
+                    <!-- Gallery -->
+                    <section id="tab-gallery" class="tab-panel" style="display: none;">
+                        <div class="dashboard-card">
+                            <h2>Gallery</h2>
+                            <form id="gallery-form">
+                                <div class="form-group">
+                                    <label for="gallery-file">Upload image</label>
+                                    <input type="file" id="gallery-file" name="gallery" accept="image/*" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gallery-caption">Caption</label>
+                                    <input type="text" id="gallery-caption" name="caption">
+                                </div>
+                                <button type="submit" class="btn-secondary">Upload</button>
+                            </form>
+                            <div class="gallery-grid" id="gallery-grid"></div>
+                        </div>
+                    </section>
+
+                    <!-- Subscription -->
+                    <section id="tab-subscription" class="tab-panel" style="display: none;">
+                        <div class="dashboard-card">
+                            <h2>Subscription</h2>
+                            <p id="current-plan">Current plan: <strong>Starter</strong></p>
+                            <p>Billing integration is coming soon. For now, your plan is managed by the BrickQuote Pro team.</p>
+                            <div class="stats-grid">
+                                <div class="stat-card"><span>Starter</span><strong>$49/mo</strong></div>
+                                <div class="stat-card"><span>Professional</span><strong>$99/mo</strong></div>
+                                <div class="stat-card"><span>Premium</span><strong>$199/mo</strong></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 BrickQuote Pro. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/assets/js/vendor/supabase.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/assets/js/supabase-client.js"></script>
+    <script src="/assets/js/ui-helpers.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/storage.js"></script>
+    <script src="/assets/js/header-auth.js"></script>
+    <script>
+        (function() {
+            'use strict';
+
+            let userId = null;
+            let contractorId = null;
+            let contractorProfile = null;
+
+            async function init() {
+                const { session } = await Auth.requireAuth(['contractor', 'admin']);
+                if (!session) return;
+                userId = session.user.id;
+                await loadContractor();
+                setupTabs();
+                await loadOverview();
+                await loadLeads();
+                await loadGallery();
+            }
+
+            function setupTabs() {
+                const nav = document.getElementById('dashboard-nav');
+                nav.querySelectorAll('a[data-tab]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const tab = link.dataset.tab;
+                        nav.querySelectorAll('a[data-tab]').forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                        document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+                        document.getElementById('tab-' + tab).style.display = 'block';
+                    });
+                });
+            }
+
+            async function loadContractor() {
+                const { data, error } = await window.sb
+                    .from('contractors')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .single();
+                if (error && error.code !== 'PGRST116') {
+                    UI.showToast(error.message, 'error');
+                    return;
+                }
+                contractorProfile = data;
+                if (data) {
+                    contractorId = data.id;
+                    fillProfileForm(data);
+                    document.getElementById('stat-plan').textContent = data.subscription_plan || 'starter';
+                    document.getElementById('current-plan').innerHTML = `Current plan: <strong>${data.subscription_plan || 'starter'}</strong>`;
+                    if (data.logo_url) {
+                        document.getElementById('logo-preview').src = data.logo_url;
+                        document.getElementById('logo-preview').style.display = 'block';
+                    }
+                    loadServiceAreas();
+                } else {
+                    contractorId = null;
+                }
+            }
+
+            function fillProfileForm(c) {
+                document.getElementById('business-name').value = c.business_name || '';
+                document.getElementById('abn').value = c.abn || '';
+                document.getElementById('contact-name').value = c.contact_name || '';
+                document.getElementById('contractor-phone').value = c.phone || '';
+                document.getElementById('contractor-email').value = c.email || '';
+                document.getElementById('website').value = c.website || '';
+                document.getElementById('description').value = c.description || '';
+            }
+
+            async function loadServiceAreas() {
+                const { data } = await window.sb
+                    .from('service_areas')
+                    .select('suburb')
+                    .eq('contractor_id', userId);
+                if (data) {
+                    document.getElementById('service-areas').value = data.map(a => a.suburb).join(', ');
+                }
+            }
+
+            async function loadOverview() {
+                const { data, error } = await window.sb
+                    .from('leads')
+                    .select('status')
+                    .eq('contractor_id', userId);
+                if (error) {
+                    UI.showToast(error.message, 'error');
+                    return;
+                }
+                const total = data.length;
+                const won = data.filter(l => l.status === 'won').length;
+                const newLeads = data.filter(l => l.status === 'new').length;
+                document.getElementById('stat-total').textContent = total;
+                document.getElementById('stat-won').textContent = won;
+                document.getElementById('stat-new').textContent = newLeads;
+
+                const recent = await window.sb
+                    .from('leads')
+                    .select('*')
+                    .eq('contractor_id', userId)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+                const container = document.getElementById('recent-leads');
+                if (!recent.data || recent.data.length === 0) {
+                    UI.renderEmptyState(container, 'No leads yet.');
+                    return;
+                }
+                container.innerHTML = `<table class="bq-table">
+                    <thead><tr><th>Suburb</th><th>Status</th><th>Estimate</th><th></th></tr></thead>
+                    <tbody>${recent.data.map(l => `<tr>
+                        <td>${l.suburb || '-'}</td>
+                        <td><span class="status-badge status-${l.status}">${l.status}</span></td>
+                        <td>${UI.formatCurrency(l.estimate)}</td>
+                        <td><button class="btn-text btn-small update-status" data-id="${l.id}" data-status="${l.status}">Update</button></td>
+                    </tr>`).join('')}</tbody>
+                </table>`;
+                attachStatusHandlers(container);
+            }
+
+            async function loadLeads() {
+                const { data, error } = await window.sb
+                    .from('leads')
+                    .select('*')
+                    .eq('contractor_id', userId)
+                    .order('created_at', { ascending: false });
+                const container = document.getElementById('all-leads');
+                if (error) {
+                    UI.showToast(error.message, 'error');
+                    return;
+                }
+                if (!data || data.length === 0) {
+                    UI.renderEmptyState(container, 'No leads assigned to you yet.');
+                    return;
+                }
+                container.innerHTML = `<table class="bq-table">
+                    <thead><tr><th>Name</th><th>Suburb</th><th>Project</th><th>Status</th><th>Estimate</th><th></th></tr></thead>
+                    <tbody>${data.map(l => `<tr>
+                        <td>${l.name || '-'}</td>
+                        <td>${l.suburb || '-'}</td>
+                        <td>${l.project_type || '-'}</td>
+                        <td><span class="status-badge status-${l.status}">${l.status}</span></td>
+                        <td>${UI.formatCurrency(l.estimate)}</td>
+                        <td><button class="btn-text btn-small update-status" data-id="${l.id}" data-status="${l.status}">Update</button></td>
+                    </tr>`).join('')}</tbody>
+                </table>`;
+                attachStatusHandlers(container);
+            }
+
+            function attachStatusHandlers(container) {
+                container.querySelectorAll('.update-status').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const statuses = ['new', 'assigned', 'contacted', 'quoted', 'won', 'lost'];
+                        const current = btn.dataset.status;
+                        const nextIndex = (statuses.indexOf(current) + 1) % statuses.length;
+                        const next = statuses[nextIndex];
+                        const { error } = await window.sb.from('leads').update({ status: next }).eq('id', btn.dataset.id);
+                        if (error) UI.showToast(error.message, 'error');
+                        else {
+                            UI.showToast('Status updated', 'success');
+                            loadOverview();
+                            loadLeads();
+                        }
+                    });
+                });
+            }
+
+            document.getElementById('contractor-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                UI.showLoading(e.target);
+                const form = e.target;
+                const payload = {
+                    user_id: userId,
+                    business_name: form.business_name.value.trim(),
+                    abn: form.abn.value.trim(),
+                    contact_name: form.contact_name.value.trim(),
+                    email: form.email.value.trim(),
+                    phone: form.phone.value.trim(),
+                    website: form.website.value.trim(),
+                    description: form.description.value.trim(),
+                    slug: UI.slugify(form.business_name.value.trim())
+                };
+
+                const logoFile = form.logo.files[0];
+                if (logoFile) {
+                    const { data, error } = await Storage.uploadLogo(logoFile);
+                    if (error) {
+                        UI.hideLoading(form);
+                        UI.showToast(error.message, 'error');
+                        return;
+                    }
+                    payload.logo_url = Storage.getPublicUrl('contractor-logos', data.path);
+                }
+
+                let result;
+                if (contractorId) {
+                    result = await window.sb.from('contractors').update(payload).eq('id', contractorId).select().single();
+                } else {
+                    result = await window.sb.from('contractors').insert(payload).select().single();
+                }
+                UI.hideLoading(form);
+                if (result.error) {
+                    UI.showToast(result.error.message, 'error');
+                    return;
+                }
+                contractorProfile = result.data;
+                contractorId = result.data.id;
+                await saveServiceAreas(form.service_areas.value);
+                UI.showToast('Profile saved.', 'success');
+            });
+
+            async function saveServiceAreas(areasText) {
+                const areas = areasText.split(',').map(s => s.trim()).filter(Boolean);
+                if (!contractorId) return;
+                await window.sb.from('service_areas').delete().eq('contractor_id', userId);
+                if (areas.length) {
+                    const rows = areas.map(suburb => ({ contractor_id: userId, suburb }));
+                    await window.sb.from('service_areas').insert(rows);
+                }
+            }
+
+            document.getElementById('gallery-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                UI.showLoading(e.target);
+                const file = e.target.gallery.files[0];
+                const caption = e.target.caption.value.trim();
+                const { data, error } = await Storage.uploadGalleryImage(file, caption);
+                UI.hideLoading(e.target);
+                if (error) {
+                    UI.showToast(error.message, 'error');
+                    return;
+                }
+                await window.sb.from('gallery_images').insert({
+                    contractor_id: userId,
+                    url: data.publicUrl,
+                    caption: caption
+                });
+                e.target.reset();
+                loadGallery();
+                UI.showToast('Image uploaded.', 'success');
+            });
+
+            async function loadGallery() {
+                const { data, error } = await window.sb
+                    .from('gallery_images')
+                    .select('*')
+                    .eq('contractor_id', userId)
+                    .order('created_at', { ascending: false });
+                const grid = document.getElementById('gallery-grid');
+                if (error) {
+                    UI.showToast(error.message, 'error');
+                    return;
+                }
+                if (!data || data.length === 0) {
+                    UI.renderEmptyState(grid, 'No gallery images yet.');
+                    return;
+                }
+                grid.innerHTML = data.map(img => `<div class="gallery-item">
+                    <img src="${img.url}" alt="${img.caption || 'Gallery image'}">
+                    <button class="delete-image" data-id="${img.id}" data-url="${img.url}" aria-label="Delete">×</button>
+                </div>`).join('');
+                grid.querySelectorAll('.delete-image').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        if (!confirm('Delete this image?')) return;
+                        const path = btn.dataset.url.split('/contractor-gallery/')[1];
+                        if (path) await Storage.deleteFile('contractor-gallery', path);
+                        await window.sb.from('gallery_images').delete().eq('id', btn.dataset.id);
+                        loadGallery();
+                    });
+                });
+            }
+
+            document.getElementById('logout-link').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await Auth.signOut();
+                window.location.href = '/';
+            });
+
+            init();
+        })();
+    </script>
+</body>
+</html>

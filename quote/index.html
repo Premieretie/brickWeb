@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brick Fence Calculator Brisbane | Free Quote Tool</title>
+    <meta name="description" content="Free brick fence calculator for Brisbane. Get instant quotes for brick fences, block fences, retaining walls, brick mailboxes and piers. No email required.">
+    <link rel="canonical" href="https://brickquotepro.com/quote/" />
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/calculator.css">
+    <link rel="stylesheet" href="/assets/css/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="quote-page">
+    <div class="sticky-quote-bar">
+        <div class="container">
+            <div class="quote-summary">
+                <div class="quote-item"><span class="label">Wall Area</span><span class="value" id="sticky-area">0 m²</span></div>
+                <div class="quote-item"><span class="label">Columns</span><span class="value" id="sticky-columns">0</span></div>
+                <div class="estimate-selector-container" id="estimate-level-selector"></div>
+                <div class="quote-total"><span class="label">Estimated Cost</span><span class="price" id="sticky-price">$0</span><span class="range" id="sticky-range">$0 - $0</span></div>
+            </div>
+        </div>
+    </div>
+    <header class="main-header compact">
+
+        <div class="container">
+            <a href="/" class="logo">
+                <svg width="32" height="32" viewBox="0 0 40 40"><rect x="4" y="4" width="14" height="14" fill="#C75B39"/><rect x="22" y="4" width="14" height="14" fill="#A0442A"/><rect x="4" y="22" width="14" height="14" fill="#A0442A"/><rect x="22" y="22" width="14" height="14" fill="#C75B39"/></svg>
+                <span>BrickQuote<span class="pro">Pro</span></span>
+            </a>
+            <nav class="main-nav">
+                <a href="/" class="btn-text">← Back</a>
+            </nav>
+        </div>
+    </header>
+    <main class="calculator-main">
+        <div class="container calculator-container">
+            <div class="controls-panel">
+                <section class="calc-section how-to-use">
+                    <div class="section-header"><span class="step-badge">?</span><h2>How to Use This Calculator</h2></div>
+                    <div class="how-to-steps">
+                        <div class="how-to-step"><span class="how-to-number">1</span><span class="how-to-text">Choose your material: traditional bricks or concrete blocks.</span></div>
+                        <div class="how-to-step"><span class="how-to-number">2</span><span class="how-to-text">Select your project type: fence, wall, front fence, retaining wall, or mailbox.</span></div>
+                        <div class="how-to-step"><span class="how-to-number">3</span><span class="how-to-text">Pick your layout and enter your wall length and height.</span></div>
+                        <div class="how-to-step"><span class="how-to-number">4</span><span class="how-to-text">Choose your brick/block style, add piers or columns if needed.</span></div>
+                        <div class="how-to-step"><span class="how-to-number">5</span><span class="how-to-text">Add a mailbox option and choose your estimate level (Budget, Typical, Premium).</span></div>
+                        <div class="how-to-step"><span class="how-to-number">6</span><span class="how-to-text">Click <strong>Book Now</strong> to request your quote, or save/share your estimate.</span></div>
+                    </div>
+                </section>
+                <section class="calc-section" data-step="1">
+                    <div class="section-header"><span class="step-badge">1</span><h2>Select Material Type</h2></div>
+                    <div class="material-selector" id="material-selector"></div>
+                    <p class="section-note">Choose bricks (traditional look) or concrete blocks (modern, cost-effective)</p>
+                </section>
+                <section class="calc-section" data-step="2">
+                    <div class="section-header"><span class="step-badge">2</span><h2>Project Type</h2></div>
+                    <div class="type-selector" id="project-type-selector">
+                        <label class="type-option" data-type="fence"><input type="radio" name="projectType" value="brick-fence" checked><div class="option-content"><svg viewBox="0 0 48 48"><rect x="4" y="16" width="40" height="28" fill="#C75B39"/><rect x="4" y="8" width="40" height="8" fill="#8B3A22"/></svg><span class="type-label">Brick Fence</span></div></label>
+                        <label class="type-option" data-type="wall"><input type="radio" name="projectType" value="brick-wall"><div class="option-content"><svg viewBox="0 0 48 48"><rect x="4" y="8" width="40" height="36" fill="#C75B39"/></svg><span class="type-label">Brick Wall</span></div></label>
+                        <label class="type-option" data-type="front"><input type="radio" name="projectType" value="front-fence"><div class="option-content"><svg viewBox="0 0 48 48"><path d="M4 40V20h12v-8h16v8h12v20" stroke="#8B3A22" fill="#C75B39"/></svg><span class="type-label">Front Fence</span></div></label>
+                        <label class="type-option" data-type="retaining"><input type="radio" name="projectType" value="retaining-wall"><div class="option-content"><svg viewBox="0 0 48 48"><path d="M4 44L10 12h28l6 32" fill="#C75B39"/></svg><span class="type-label">Retaining Wall</span></div></label>
+                        <label class="type-option" data-type="mailbox"><input type="radio" name="projectType" value="mailbox"><div class="option-content"><svg viewBox="0 0 48 48"><rect x="16" y="24" width="16" height="20" fill="#C75B39"/><rect x="20" y="16" width="8" height="8" fill="#8B3A22"/></svg><span class="type-label">Mailbox</span></div></label>
+                        <label class="type-option" data-type="combo"><input type="radio" name="projectType" value="mailbox-fence"><div class="option-content"><svg viewBox="0 0 48 48"><rect x="4" y="24" width="14" height="20" fill="#C75B39"/><rect x="30" y="24" width="14" height="20" fill="#C75B39"/><rect x="18" y="28" width="12" height="16" fill="#8B3A22"/></svg><span class="type-label">Mailbox + Brick</span></div></label>
+                    </div>
+                </section>
+                <section class="calc-section" data-step="3">
+                    <div class="section-header"><span class="step-badge">3</span><h2>Layout</h2></div>
+                    <div class="layout-selector">
+                        <label class="layout-option"><input type="radio" name="layout" value="straight" checked><div class="option-content"><div class="layout-preview straight"></div><span>Straight</span></div></label>
+                        <label class="layout-option"><input type="radio" name="layout" value="l-shape"><div class="option-content"><div class="layout-preview l-shape"></div><span>L Shape</span></div></label>
+                        <label class="layout-option"><input type="radio" name="layout" value="u-shape"><div class="option-content"><div class="layout-preview u-shape"></div><span>U Shape</span></div></label>
+                        <label class="layout-option"><input type="radio" name="layout" value="front-returns"><div class="option-content"><div class="layout-preview front-returns"></div><span>With Returns</span></div></label>
+                    </div>
+                </section>
+                <section class="calc-section" data-step="4">
+                    <div class="section-header"><span class="step-badge">4</span><h2>Measurements</h2></div>
+                    <div class="measurements-container" id="measurements-container"></div>
+                    <div class="input-group height-group">
+                        <label>Height (m)</label>
+                        <div class="slider-input">
+                            <input type="range" min="0.5" max="3" value="1.8" step="0.1" id="height-slider">
+                            <input type="number" min="0.5" max="3" value="1.8" step="0.1" id="height-input">
+                        </div>
+                        <div class="height-presets">
+                            <button class="preset-btn" data-height="1.2">1.2m</button>
+                            <button class="preset-btn active" data-height="1.8">1.8m</button>
+                            <button class="preset-btn" data-height="2.1">2.1m</button>
+                            <button class="preset-btn" data-height="2.4">2.4m</button>
+                        </div>
+                    </div>
+                </section>
+                <section class="calc-section" data-step="5">
+                    <div class="section-header"><span class="step-badge">5</span><h2>Material Style</h2></div>
+                    <div class="brick-selector" id="brick-selector"></div>
+                </section>
+                <section class="calc-section" data-step="6">
+                    <div class="section-header"><span class="step-badge">6</span><h2>Columns/Piers</h2></div>
+                    <div class="column-selector">
+                        <label class="column-option"><input type="radio" name="columnSize" value="none"><div class="option-content"><span class="size-label">None</span><span class="price">No extra cost</span></div></label>
+                        <label class="column-option"><input type="radio" name="columnSize" value="230" checked><div class="option-content"><span class="size-label">230 x 230mm</span><span class="price">$250-600 each</span></div></label>
+                        <label class="column-option"><input type="radio" name="columnSize" value="350"><div class="option-content"><span class="size-label">350 x 350mm</span><span class="price">$600-1,200 each</span></div></label>
+                        <label class="column-option"><input type="radio" name="columnSize" value="450"><div class="option-content"><span class="size-label">450 x 450mm</span><span class="price">$900-1,800 each</span></div></label>
+                    </div>
+                    <div class="input-group">
+                        <label>Number of Columns</label>
+                        <div class="slider-input">
+                            <input type="range" min="0" max="10" value="2" id="columns-slider">
+                            <input type="number" min="0" max="10" value="2" id="columns-input">
+                        </div>
+                    </div>
+                </section>
+                <section class="calc-section" data-step="6">
+                    <div class="section-header"><span class="step-badge">6</span><h2>Mailbox</h2></div>
+                    <div class="mailbox-selector">
+                        <label class="mailbox-option"><input type="radio" name="mailboxType" value="none" checked><div class="option-content"><svg viewBox="0 0 48 48"><rect x="8" y="8" width="32" height="32" fill="#ddd"/></svg><span class="mailbox-name">No Mailbox</span><span class="price">$0</span></div></label>
+                        <label class="mailbox-option"><input type="radio" name="mailboxType" value="standard"><div class="option-content"><svg viewBox="0 0 48 48"><rect x="16" y="24" width="16" height="20" fill="#C75B39"/><rect x="20" y="20" width="8" height="8" fill="#666"/></svg><span class="mailbox-name">Standard</span><span class="price">$750</span></div></label>
+                        <label class="mailbox-option"><input type="radio" name="mailboxType" value="pillar"><div class="option-content"><svg viewBox="0 0 48 48"><rect x="12" y="20" width="24" height="24" fill="#C75B39"/><rect x="16" y="16" width="16" height="8" fill="#666"/></svg><span class="mailbox-name">Pillar</span><span class="price">$1,500</span></div></label>
+                        <label class="mailbox-option"><input type="radio" name="mailboxType" value="parcel"><div class="option-content"><svg viewBox="0 0 48 48"><rect x="10" y="16" width="28" height="28" fill="#C75B39"/><rect x="14" y="12" width="20" height="8" fill="#666"/></svg><span class="mailbox-name">Large Parcel</span><span class="price">$2,500</span></div></label>
+                    </div>
+                </section>
+                <section class="calc-section cta-section">
+                    <button class="btn-large btn-primary" id="book-now-btn">Book Now</button>
+                    <button class="btn-large btn-secondary" id="save-quote-btn">Save & Share Quote</button>
+                    <button class="btn-large btn-secondary" id="pdf-btn">Download PDF</button>
+                    <a href="/ar-measure/" class="btn-large btn-secondary btn-ar-inline">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                        AR Measure
+                    </a>
+                </section>
+            </div>
+            <div class="preview-panel">
+                <div class="preview-container">
+                    <h3>Live 3D Preview</h3>
+                    <div id="fence-visualizer" class="fence-visualizer-3d"></div>
+                    <div class="preview-instructions">
+                        <span>🖱️ Click & drag to rotate</span>
+                        <span>🔍 Scroll to zoom</span>
+                    </div>
+                    <div class="preview-controls">
+                        <button class="view-btn active" data-view="front">Front View</button>
+                        <button class="view-btn" data-view="side">Side View</button>
+                        <button class="view-btn" data-view="iso">Isometric</button>
+                    </div>
+                </div>
+                <div class="quote-details">
+                    <h3>Quote Summary</h3>
+                    <div class="quote-breakdown" id="quote-breakdown"></div>
+                    <div class="quote-disclaimer" id="quote-disclaimer"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Book Now Modal -->
+    <div class="modal" id="book-modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h3>Book Now</h3>
+            <p>Enter your details and we'll contact you about your quote.</p>
+            <form id="book-form" class="book-form">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <input type="tel" name="phone" placeholder="Phone Number" required>
+                <textarea name="message" placeholder="Additional details (optional)"></textarea>
+                <button type="submit" class="btn-primary btn-large">Send Quote Request</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="save-modal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <h3>Save Your Quote</h3>
+            <div class="share-options">
+                <div class="share-option"><button class="btn-secondary" id="copy-link">Copy Link</button><span id="link-copied" class="copied-msg">Link copied!</span></div>
+                <div class="share-option"><button class="btn-secondary" id="print-quote">Print Quote</button></div>
+            </div>
+            <div class="lead-form">
+                <h4>Save to your account</h4>
+                <p id="save-quote-hint">Log in to save this quote and request quotes from contractors.</p>
+                <button class="btn-primary btn-block" id="supabase-save-quote" style="margin-bottom: 16px;">Save to My Account</button>
+                <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+                <h4>Get real quotes from local bricklayers</h4>
+                <p>Submit your project and we'll match you with qualified contractors.</p>
+                <a id="lead-capture-link" class="btn-primary btn-block" style="display: inline-block; text-align: center;">Get Real Quotes</a>
+            </div>
+        </div>
+    </div>
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/pricing.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="/assets/js/renderer3d.js"></script>
+    <script src="/assets/js/calculator.js"></script>
+    <script src="/assets/js/vendor/supabase.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/assets/js/supabase-client.js"></script>
+    <script src="/assets/js/ui-helpers.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/header-auth.js"></script>
+    <script src="/assets/js/quote-auth.js"></script>
+</body>
+</html>
