@@ -2,7 +2,7 @@
 
 ## Summary
 
-All `.html` pages were migrated to clean, trailing-slash URLs using a folder/`index.html` structure compatible with GitHub Pages. Every old `.html` URL now serves a meta-refresh redirect to the new clean URL. Canonical tags, internal links, the sitemap, and `robots.txt` were updated to reference only clean URLs.
+All `.html` pages were migrated to clean, trailing-slash URLs using a folder/`index.html` structure compatible with GitHub Pages. Every old `.html` URL now serves a meta-refresh redirect to the new clean URL. Canonical tags, internal links, the sitemap, and `robots.txt` were updated to reference only clean URLs. hjuh
 
 ## Domain
 
