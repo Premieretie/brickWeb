@@ -4,7 +4,6 @@ node_modules
 .env.*.local
 *.log
 server.out
-config.js
 .DS_Store
 .vscode
 .idea

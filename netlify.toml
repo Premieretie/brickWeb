@@ -1,0 +1,24 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[dev]
+  port = 8090
+
+# Serve /config.js from the Netlify Function so secrets stay server-side
+[[redirects]]
+  from = "/config.js"
+  to = "/.netlify/functions/config"
+  status = 200
+
+# Dynamic contractor profiles — rewrite to the profile page
+[[redirects]]
+  from = "/contractors/:slug"
+  to = "/contractors/profile/"
+  status = 200
+
+# 404 fallback (must be last)
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
