@@ -7,6 +7,7 @@ import CustomerDashboard from '@/components/CustomerDashboard';
 
 export const metadata: Metadata = {
   title: 'Customer Dashboard',
+  alternates: { canonical: 'https://brickquotepro.com/dashboard/customer' },
   robots: { index: false },
 };
 

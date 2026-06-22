@@ -1,0 +1,96 @@
+name: Deploy to Windows Server (Template)
+
+# ============================================================
+# This workflow is intentionally DISABLED.
+# Copy/rename this file to deploy.yml and fill in the
+# repository secrets when you are ready to deploy automatically.
+# ============================================================
+
+on:
+  # Disabled — only run manually when explicitly enabled
+  workflow_dispatch:
+
+env:
+  ARTIFACT_NAME: brickquotepro-standalone
+
+jobs:
+  # ── Build and package standalone output ───────────────────
+  build:
+    name: Build Next.js Standalone
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build Next.js app
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_SITE_URL: https://brickquotepro.com
+          NEXT_TELEMETRY_DISABLED: 1
+
+      - name: Package standalone build
+        run: |
+          cd .next/standalone
+          zip -r ../../${{ env.ARTIFACT_NAME }}.zip .
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACT_NAME }}.zip
+          retention-days: 1
+
+  # ── Deploy to Windows Server 2019 (DISABLED) ──────────────
+  deploy:
+    name: Deploy to Windows Server
+    runs-on: ubuntu-latest
+    needs: build
+    environment: production
+    # Disabled until secrets are configured and the workflow is enabled
+    if: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ./artifacts
+
+      - name: Copy artifact and deployment scripts to Windows Server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          source: "artifacts/${{ env.ARTIFACT_NAME }}.zip,deployment/windows/deploy.ps1,deployment/windows/install-service.ps1,deployment/iis/web.config"
+          target: "C:/inetpub/brickquotepro"
+          strip_components: 1
+
+      - name: Deploy via PowerShell over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script_stop: true
+          script: |
+            C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -Command "
+              Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process -Force;
+              C:\inetpub\brickquotepro\deploy.ps1 -ArtifactPath C:\inetpub\brickquotepro\${{ env.ARTIFACT_NAME }}.zip
+            "

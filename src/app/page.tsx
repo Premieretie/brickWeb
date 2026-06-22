@@ -8,9 +8,35 @@ export const metadata: Metadata = {
   alternates: { canonical: 'https://brickquotepro.com/' },
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      name: 'BrickQuote Pro',
+      url: 'https://brickquotepro.com/',
+      description: 'Free brick fence and wall calculator for Brisbane.',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: 'https://brickquotepro.com/quote',
+        'query-input': 'required',
+      },
+    },
+    {
+      '@type': 'Organization',
+      name: 'BrickQuote Pro',
+      url: 'https://brickquotepro.com',
+    },
+  ],
+};
+
 export default function HomePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
       <main>
         <section className="hero">

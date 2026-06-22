@@ -15,3 +15,14 @@ build/
 
 # Vercel / deployment
 .vercel
+
+# Windows deployment artifacts
+deployment/artifacts/
+*.pfx
+*.key
+*.pem
+*.crt
+*.csr
+
+# Cloudflare / SSL certificates
+cloudflare-origin.*

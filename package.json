@@ -1,14 +1,13 @@
 {
   "name": "brickquote-pro",
   "version": "2.0.0",
-  "description": "Brick fence and wall quote calculator — Next.js 14 App Router with Supabase",
+  "description": "Brick fence and wall quote calculator — Next.js 15 App Router with Supabase",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p 3000",
-    "lint": "next lint",
-    "legacy:server": "node server.js"
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "^15.3.3",
