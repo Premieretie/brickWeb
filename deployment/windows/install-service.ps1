@@ -16,7 +16,9 @@ param(
     [string]$AppDir = "C:\inetpub\brickquotepro\site",
     [string]$ServiceName = "BrickQuotePro",
     [string]$DisplayName = "BrickQuote Pro Next.js",
-    [string]$LogDir = "C:\inetpub\logs\brickquotepro"
+    [string]$LogDir = "C:\inetpub\logs\brickquotepro",
+    [int]$Port = 3000,
+    [string]$Hostname = "127.0.0.1"
 )
 
 $ErrorActionPreference = "Stop"
@@ -66,7 +68,7 @@ if (-not (Test-Path $nodeExe)) {
 & $nssm set $ServiceName DisplayName "$DisplayName"
 & $nssm set $ServiceName Description "Next.js App Router for brickquotepro.com"
 & $nssm set $ServiceName Directory $AppDir
-& $nssm set $ServiceName AppEnvironmentExtra NODE_ENV=production
+& $nssm set $ServiceName AppEnvironmentExtra NODE_ENV=production PORT=$Port HOSTNAME=$Hostname
 & $nssm set $ServiceName Start SERVICE_AUTO_START
 
 # ── Configure logging ─────────────────────────────────────
