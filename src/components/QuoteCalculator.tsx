@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from 'react';
 import { BRICKQUOTE_CONFIG, calculateQuote, suggestColumns, type QuoteState } from '@/lib/pricing';
+import { saveQuote } from '@/app/quote/actions';
+import LeadCaptureForm from '@/components/LeadCaptureForm';
 
 const DEFAULT_STATE: QuoteState = {
   materialType: 'brick',
@@ -19,6 +21,8 @@ const DEFAULT_STATE: QuoteState = {
 export default function QuoteCalculator() {
   const [state, setState] = useState<QuoteState>(DEFAULT_STATE);
   const [saved, setSaved] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
 
   const update = useCallback((patch: Partial<QuoteState>) => {
     setState((prev) => ({ ...prev, ...patch }));
@@ -80,6 +84,21 @@ ${quote.breakdown.map((r) => `<div class="row"><span>${r.label}</span><span>${r.
 </body></html>`;
     const w = window.open('', '_blank');
     if (w) { w.document.write(content); w.document.close(); setTimeout(() => w.print(), 400); }
+  };
+
+  const handleSaveQuote = async () => {
+    setSaveLoading(true);
+    setSaveMessage('');
+    const result = await saveQuote(state, {
+      totalAvg: quote.totalAvg,
+      materialName: quote.materialName,
+    });
+    setSaveLoading(false);
+    if (result.success) {
+      setSaveMessage('Quote saved to your dashboard.');
+    } else {
+      setSaveMessage(result.error || 'Failed to save quote.');
+    }
   };
 
   const brickOptions = state.materialType === 'brick' ? BRICKQUOTE_CONFIG.bricks : BRICKQUOTE_CONFIG.blocks;
@@ -265,13 +284,37 @@ ${quote.breakdown.map((r) => `<div class="row"><span>${r.label}</span><span>${r.
 
               <p className="disclaimer-text">{BRICKQUOTE_CONFIG.disclaimer}</p>
 
+              {saveMessage && <p className="save-message">{saveMessage}</p>}
+
               <div className="results-actions">
                 <button className="btn-primary btn-block" onClick={generatePDF}>Download PDF</button>
                 <button className="btn-secondary btn-block" onClick={copyLink}>
                   {saved ? '✓ Copied!' : 'Copy Share Link'}
                 </button>
+                <button className="btn-secondary btn-block" onClick={handleSaveQuote} disabled={saveLoading}>
+                  {saveLoading ? 'Saving…' : 'Save Quote'}
+                </button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="lead-capture-section">
+        <div className="container">
+          <div className="lead-capture-layout">
+            <div className="lead-capture-info">
+              <h2>Get quotes from licensed bricklayers</h2>
+              <p>
+                Stop guessing. Submit your estimate and a qualified contractor will contact you with a real quote for your project.
+              </p>
+              <ul>
+                <li>✓ Free, no obligation</li>
+                <li>✓ Licensed and insured contractors</li>
+                <li>✓ Compare multiple quotes</li>
+              </ul>
+            </div>
+            <LeadCaptureForm quoteState={state} quoteResult={quote} />
           </div>
         </div>
       </div>
@@ -313,9 +356,17 @@ ${quote.breakdown.map((r) => `<div class="row"><span>${r.label}</span><span>${r.
         .breakdown-row.highlight { font-weight: 700; color: var(--primary); border-bottom: none; padding-top: 10px; }
         .disclaimer-text { font-size: 0.75rem; color: var(--text-light); line-height: 1.4; margin-bottom: 20px; }
         .results-actions { display: flex; flex-direction: column; gap: 10px; }
+        .save-message { font-size: 0.85rem; color: var(--primary); text-align: center; margin-bottom: 8px; }
+        .lead-capture-section { padding: 80px 0; background: var(--secondary); color: white; }
+        .lead-capture-layout { display: grid; grid-template-columns: 1fr 460px; gap: 60px; align-items: start; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .lead-capture-info h2 { font-size: 2.2rem; margin-bottom: 20px; }
+        .lead-capture-info p { font-size: 1.1rem; opacity: 0.85; margin-bottom: 24px; }
+        .lead-capture-info ul { list-style: none; }
+        .lead-capture-info li { margin-bottom: 12px; font-size: 1rem; opacity: 0.9; }
         @media (max-width: 900px) {
           .calculator-layout { grid-template-columns: 1fr; }
           .results-sticky { position: static; }
+          .lead-capture-layout { grid-template-columns: 1fr; gap: 32px; }
         }
       `}</style>
     </div>

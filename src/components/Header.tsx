@@ -1,10 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export default function Header() {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const navLinks = [
+    { href: '/quote', label: 'Calculator', active: pathname === '/quote' },
+    { href: '/contractors', label: 'Contractors', active: pathname.startsWith('/contractors') },
+    { href: '/join', label: 'Join as Pro', active: pathname === '/join' },
+    { href: '/faq', label: 'FAQ', active: pathname === '/faq' },
+  ];
 
   return (
     <header className="main-header">
@@ -18,13 +27,29 @@ export default function Header() {
           </svg>
           <span>BrickQuote<span className="pro">Pro</span></span>
         </Link>
-        <nav className="main-nav" aria-label="Main navigation">
-          <Link href="/quote" className={pathname === '/quote' ? 'active' : ''}>Calculator</Link>
-          <Link href="/services/brick-fences" className={pathname.startsWith('/services') ? 'active' : ''}>Services</Link>
-          <Link href="/locations/brisbane" className={pathname.startsWith('/locations') ? 'active' : ''}>Locations</Link>
-          <Link href="/faq" className={pathname === '/faq' ? 'active' : ''}>FAQ</Link>
-          <Link href="/quote" className="btn-primary quote-btn">Get Quote</Link>
+        <nav className={`main-nav ${menuOpen ? 'open' : ''}`} aria-label="Main navigation">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={link.active ? 'active' : ''}
+              onClick={() => setMenuOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+          <Link href="/quote" className="btn-primary quote-btn" onClick={() => setMenuOpen(false)}>Get Quote</Link>
         </nav>
+        <button
+          className="mobile-menu-toggle"
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </div>
     </header>
   );

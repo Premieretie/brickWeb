@@ -38,12 +38,20 @@ export default function Footer() {
             </ul>
           </div>
           <div className="footer-links">
-            <h4>Resources</h4>
+            <h4>Marketplace</h4>
             <ul>
+              <li><Link href="/contractors">Find a Contractor</Link></li>
+              <li><Link href="/join">Join as a Pro</Link></li>
               <li><Link href="/quote">Calculator</Link></li>
-              <li><Link href="/measure">AR Measure</Link></li>
               <li><Link href="/faq">FAQ</Link></li>
-              <li><Link href="/login">Login</Link></li>
+            </ul>
+          </div>
+          <div className="footer-links">
+            <h4>Legal</h4>
+            <ul>
+              <li><Link href="/terms">Terms of Service</Link></li>
+              <li><Link href="/privacy">Privacy Policy</Link></li>
+              <li><Link href="/contractor-agreement">Contractor Agreement</Link></li>
             </ul>
           </div>
         </div>
