@@ -27,7 +27,7 @@ export default function Header() {
           </svg>
           <span>BrickQuote<span className="pro">Pro</span></span>
         </Link>
-        <nav className={`main-nav ${menuOpen ? 'open' : ''}`} aria-label="Main navigation">
+        <nav className={menuOpen ? 'main-nav open' : 'main-nav'} aria-label="Main navigation">
           {navLinks.map((link) => (
             <Link
               key={link.href}
